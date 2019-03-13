@@ -1,0 +1,49 @@
+const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+function isAnagram(s1, s2){
+    if(s1.length != s2.length) return false;
+    let arr1 = [];
+    let arr2 = [];
+    for(let i=0;i<256; i++){
+        arr1.push(0);
+        arr2.push(0);
+    }
+    for(let i = 0;i< s1.length; i++){
+        arr1[s1[i].charCodeAt(0)] +=1;
+    }
+    for(let i = 0;i< s2.length; i++){
+        arr2[s2[i].charCodeAt(0)] +=1;
+    }
+
+    for(let i=0;i<256; i++){
+        if(arr1[i] != arr2[i]) return "NO";
+    }
+
+    return "YES";
+    
+}
+function compute(){
+    let t,s1,s2;
+    let lineCount = 0;
+    readline.on('line', (l) => {
+        if(lineCount == 0){
+            t = parseInt(l);
+        }else if(lineCount%2 == 1){
+            s1 = l;
+        }else{
+            s2= l;
+           console.log(isAnagram(s1,s2));
+        }
+        lineCount++;
+        if(lineCount == 2*t+1){
+            readline.close();
+        }
+    })
+   
+}
+
+compute();
+

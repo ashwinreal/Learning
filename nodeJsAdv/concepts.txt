@@ -1,0 +1,10 @@
+process.binding() -> connects Js and c++
+
+When node program  starts it creates a single thread and executes all code in it.
+Event loop decides how the code is run
+
+Node Event loop is single threaded
+Node frameworks/ Std Lib not single threaded
+ -> Node's c++ has a thread pool(containg 4 threads ,by default) which does the threading 
+
+Improve NodeJS -> clustering mode(recomended),worker thread(experimental) 

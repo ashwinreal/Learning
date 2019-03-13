@@ -1,0 +1,124 @@
+function Pq(){
+    this.arr = [];
+
+    this.isEmpty = function(){
+        return !this.arr.length;
+    }
+
+    this.size = function(){
+        return this.arr.length;
+    }
+
+    this.insert = function(obj){
+        this.arr.push(obj);
+        var i = this.arr.length-1;
+        while(i!=0 && this.arr[Math.round ( (i-1)/2 )] > this.arr[i]){
+            this.swap(i,Math.round((i-1)/2));
+            i = Math.round((i-1)/2);
+        }
+    }
+
+    this.heapify = function(arr, i){
+        var smallest  = i,
+        l = 2*i+1,
+        r = 2*i +2;
+
+        if(l < arr.length && arr[l] < arr[smallest]){
+            smallest = l;
+        }
+
+        if(r< arr.length && arr[r] < arr[smallest]){
+            smallest = r;
+        }
+
+        if(smallest != i){
+            this.swap(i, smallest);
+            this.heapify(arr,smallest);
+        }    
+    }
+
+    this.getMin = function(){
+        if(!this.arr.length) return;
+        var retVal = Object.assign( {}, this.arr[0]);
+        this.swap(0, this.arr.length-1);
+        this.arr.length = this.arr.length -1;
+        this.heapify(this.arr,0);
+        return retVal;
+    }
+
+    this.swap = function(i,j){
+        var temp = this.arr[i];
+        this.arr[i] = this.arr[j];
+        this.arr[j] = temp;
+    }
+}
+
+function SortableObj(key,value){
+    this.key = key;
+    this.value = value;
+    this.valueOf = function(){
+        return this.value;
+    }
+}
+
+var string = "ABCBBBBFFFFFTTTTYYPYPADSAFDASFZZZDDDEEEEWWWWWWWWWWW";
+
+var arrFreq = [];
+for(var i = 0;i<26;i++){
+    arrFreq.push(new SortableObj(String.fromCharCode(65+i),0));
+}
+
+for(var i=0;i<string.length;i++){
+    arrFreq[string[i].charCodeAt(0) - 65].value+=1;
+}
+var pq = new Pq();
+for(var i=0; i<arrFreq.length;i++){
+    pq.insert(arrFreq[i]);
+}
+
+while(pq.size() > 1){
+    var left = pq.getMin();
+    var right = pq.getMin();
+    var newNode = new SortableObj(left.key+right.key, left+right);
+    newNode.left = left;
+    newNode.right = right;
+    pq.insert(newNode);
+}
+
+
+var root = pq.getMin();
+var codes = {};
+function getCodes(root, code){
+    if(!root.left && !root.right){
+        codes[root.key] = code;
+    }
+    if(root.left){
+        getCodes(root.left, code+"0");
+    }
+    if(root.right){
+        getCodes(root.right, code+"1");
+    }
+}
+
+function calculateCompressionRatio(string ,codes){
+    string = unescape(encodeURIComponent(string));
+    var originalBitString = "", compressedBitString = "";
+    for(var i=0;i< string.length;i++){
+        originalBitString+=string[i].charCodeAt(0).toString(2);
+    }
+    // console.log(originalBitString);
+    for(var i=0;i< string.length;i++){
+        compressedBitString+=codes[string[i]];
+    }
+    // console.log(compressedBitString);
+
+    return originalBitString.length/compressedBitString.length;
+
+}
+
+getCodes(root,"");
+var ratio = calculateCompressionRatio(string,codes);
+
+console.log("ratio = " + ratio);
+
+

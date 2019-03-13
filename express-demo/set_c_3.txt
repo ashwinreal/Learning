@@ -1,0 +1,74 @@
+const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+// function nge(arr, len) {
+//     res = [];
+//     for (let i = 0; i < len; i++) {
+//         let flag = false;
+//         for (let j = i + 1; j < len; j++) {
+//             if (arr[j] > arr[i]) {
+//                 res.push(arr[j]);
+//                 flag = true;
+//                 break;
+//             }
+
+//         }
+//         if (!flag) {
+//             res.push(-1);
+//         }
+//     }
+//     console.log(res);
+
+// }
+
+
+// using stack 
+function nge2(arr, len) {
+    res = [];
+    stack = [];
+    let s1 = 0;
+    let count = 0;
+    var i =0;
+    for (i = 0; i < len; i++) {
+        if (arr[i] <= arr[s1]) {
+            count++;
+            continue;
+        }
+        for (let j = 0; j < count; j++) {
+            stack.push(arr[i]);
+        }
+        s1 = i;
+        count = 1;
+    }
+    for (let j = 0; j < count; j++) {
+        stack.push(-1);
+    }
+    console.log(stack);
+
+}
+
+function compute() {
+    let t, len, arrStr, arr;
+    let lineCount = 0;
+    readline.on('line', (l) => {
+        if (lineCount == 0) {
+            t = parseInt(l);
+        } else if (lineCount % 2 == 1) {
+            len = parseInt(l);
+        } else {
+            arrStr = l;
+            arr = arrStr.split(' ').map((num) => parseInt(num));
+            nge2(arr, len);
+        }
+        lineCount++;
+        if (lineCount == 2 * t + 1) {
+            readline.close();
+        }
+    })
+
+}
+
+compute();
+
